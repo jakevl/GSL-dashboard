@@ -22,7 +22,7 @@ sa_elev_gauge=gauge(current_sa_elev, min=elev_min, max=elev_max, abbreviate=F, s
 sa_elev_ts=
 	plot_ly(subset(elevation, site_no=='10010000'), x=~Date) %>%
 		add_lines(y=~elev_ft, x=~Date, name=~Bay) %>%
-		layout(title = "South arm elevation",
+		layout(title = "South Arm elevation",
 			xaxis = list(title = "", range=c(as.numeric(gauge_date_range[2]-365*20)*86400000,as.numeric(gauge_date_range[2])*86400000), rangeslider = list(type = "date")),
 			yaxis = list(title = 'WSE (feet)')
 		) %>% 
@@ -35,11 +35,6 @@ sa_elev_ts=
 				'select2d'
 			)
 		)
-
-
-
-
-
 
 
 ### Salinity
