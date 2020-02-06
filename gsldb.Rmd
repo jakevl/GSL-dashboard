@@ -1,0 +1,54 @@
+---
+title: "Great Salt Lake Dashboard"
+output: 
+  flexdashboard::flex_dashboard
+---
+
+```{r, init}
+source('modules/init.r')
+```
+
+# South Arm
+```{r, sa}
+source('modules/south_arm.r')
+```
+
+Column 
+-----------------------------------------------------------------------
+### Elevation
+```{r}
+sa_elev_gauge
+br()
+sa_elev_ts
+```
+
+Column 
+-----------------------------------------------------------------------
+
+### Salinity
+```{r}
+sa_sal_gauge
+br()
+sa_sal_ts
+```
+
+
+# North Arm
+
+# Causeway breach
+
+# Tributaries
+
+
+
+
+
+
+
+
+
+
+
+
+
+
