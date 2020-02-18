@@ -5,14 +5,14 @@ output:
     theme: yeti
     orientation: rows
     css: extra.css
-	source_code: "https://github.com/utah-dwq/GSL-dashboard"
-	social: menu
+    source_code: "https://github.com/utah-dwq/GSL-dashboard"
+    social: menu
 ---
 
 
 ```{r, init}
 #setwd('C:\\Users\\jvander\\Documents\\R\\gsldb')
-source('modules/init.R')
+#source('modules/init.R')
 ```
 
 # Salinity
