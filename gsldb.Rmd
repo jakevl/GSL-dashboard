@@ -1,49 +1,98 @@
 ---
-title: "Great Salt Lake Dashboard"
+title: "Great Salt Lake Salinity Dashboard"
 output: 
-  flexdashboard::flex_dashboard
+  flexdashboard::flex_dashboard:
+    theme: yeti
+    orientation: rows
+    css: extra.css
+	source_code: "https://github.com/user/repo"
+	social: menu
 ---
 
+
 ```{r, init}
-source('modules/init.r')
+#setwd('C:\\Users\\jvander\\Documents\\R\\gsldb')
+#source('modules/init.R')
 ```
 
-# South Arm
-```{r, sa}
-source('modules/south_arm.r')
-```
+# Salinity
+Sidebar {.sidebar data-width=300}
+-------------------------------------
 
-Column 
------------------------------------------------------------------------
-### Elevation
+### Salinity in Great Salt Lake
+Salinity is measured... All data from NWIS. 
+
+**Gilbert Bay salinity** is characterized by the average of open water Gilbert Bay surface samples in the last 120 days.  
+<br>
+**Gunnison Bay salinity** is the average of measurements from last 120 days at the Gunnison Bay near Saline, UT gauge.
+
+
 ```{r}
-sa_elev_gauge
-br()
-sa_elev_ts
+source('modules/salinity.r')
 ```
 
-Column 
+Row
 -----------------------------------------------------------------------
-
-### Salinity
+### 
 ```{r}
 sa_sal_gauge
-br()
-sa_sal_ts
+```
+
+### 
+```{r}
+na_sal_gauge
 ```
 
 
-# North Arm
+Row
+-----------------------------------------------------------------------
 
-# Causeway breach
-
-# Tributaries
-
-
-
-
+### Time series
+```{r}
+sal_ts
+```
 
 
+
+# Elevation
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+
+```{r}
+source('modules/elevation.r')
+```
+
+Row
+-----------------------------------------------------------------------
+### Gilbert Bay
+```{r}
+sa_elev_gauge
+```
+
+### Gunnison Bay
+```{r}
+na_elev_gauge
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Time series
+```{r}
+elev_ts
+```
+
+
+
+<style>
+body:after {
+content: url(www/deq_dwq_logo.png);
+position: fixed;
+bottom: 0.5em;
+left: 0.5em;
+}
+</style>
 
 
 
