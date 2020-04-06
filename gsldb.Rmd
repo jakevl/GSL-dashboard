@@ -9,10 +9,9 @@ output:
     social: menu
 ---
 
-
 ```{r, init}
 #setwd('C:\\Users\\jvander\\Documents\\R\\gsldb')
-#source('modules/init.R')
+source('modules/init.R')
 ```
 
 # Salinity
@@ -28,7 +27,7 @@ Salinity is measured... All data from NWIS.
 
 
 ```{r}
-source('modules/salinity.r')
+source('modules/salinity.R')
 ```
 
 Row
@@ -59,17 +58,17 @@ Sidebar {.sidebar data-width=300}
 -------------------------------------
 
 ```{r}
-source('modules/elevation.r')
+source('modules/elevation.R')
 ```
 
 Row
 -----------------------------------------------------------------------
-### Gilbert Bay
+### 
 ```{r}
 sa_elev_gauge
 ```
 
-### Gunnison Bay
+### 
 ```{r}
 na_elev_gauge
 ```
@@ -81,6 +80,48 @@ Row
 ### Time series
 ```{r}
 elev_ts
+```
+
+
+
+
+# Breach flows
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+```{r}
+source('modules/breach.R')
+```
+
+Row
+-----------------------------------------------------------------------
+### Breach flows
+```{r}
+breach_disch_ts
+```
+
+Row
+-----------------------------------------------------------------------
+### 
+```{r}
+breach_disch_hist
+```
+
+
+
+
+# Gilbert Bay salt pools
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+```{r}
+source('modules/salt-pools.R')
+```
+
+
+Row
+-----------------------------------------------------------------------
+###
+```{r}
+salt_mass_plot
 ```
 
 

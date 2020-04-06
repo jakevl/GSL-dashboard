@@ -3,7 +3,7 @@
 elev_summ=dplyr::summarize(elevation, elev_min=round(min(elev_ft),1), elev_max=round(max(elev_ft),1), elev_mean=round(mean(elev_ft),1))
 
 current_sa_elev=subset(elevation, site_no=='10010000' & Date==max(Date))$elev_ft
-sa_elev_gauge=gauge(current_sa_elev, min=elev_summ$elev_min, max=elev_summ$elev_max, abbreviate=F, symbol = ' ft',
+sa_elev_gauge=gauge(current_sa_elev, min=elev_summ$elev_min, max=elev_summ$elev_max, abbreviate=F, symbol = ' ft', label='Gilbert Bay elevation',
 	sectors=gaugeSectors(
 		colors=gauge_cols,
 		success=c(4198,4206),
@@ -15,7 +15,7 @@ sa_elev_gauge=gauge(current_sa_elev, min=elev_summ$elev_min, max=elev_summ$elev_
 
 current_na_elev=subset(elevation, site_no=='10010100' & Date==max(Date))$elev_ft
 
-na_elev_gauge=gauge(current_na_elev, min=elev_summ$elev_min, max=elev_summ$elev_max, abbreviate=F, symbol = ' ft',
+na_elev_gauge=gauge(current_na_elev, min=elev_summ$elev_min, max=elev_summ$elev_max, abbreviate=F, symbol = ' ft', label='Gunnison Bay elevation',
 	sectors=gaugeSectors(
 		colors=gauge_cols,
 		success=c(4198,4206),

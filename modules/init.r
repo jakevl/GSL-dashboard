@@ -33,8 +33,11 @@ elevation=merge(elevation, site_list, by.x='site_no', by.y='SiteNumber')
 
 
 ### Breach discharge
-breach_data=dataRetrieval::readNWISuv(siteNumbers=subset(site_list, SiteType=="Causeway breach")$SiteNumber, parameterCd="00060", tz="America/Denver", startDate = "2010-01-01", endDate = Sys.Date())
-breach_data=dplyr::rename(breach_data, discharge_cfs=X_00060_00000)
+breach_data=dataRetrieval::readNWISdv(siteNumbers=subset(site_list, SiteType=="Causeway breach")$SiteNumber, parameterCd="00060", startDate = "2010-01-01", endDate = Sys.Date())
+breach_data=dplyr::rename(breach_data, discharge_cfs=X_00060_00003)
+breach_data_wide=reshape2::dcast(breach_data, Date~site_no, value.var='discharge_cfs')
+breach_data_wide = breach_data_wide %>% mutate(Net=`10010025`-`10010026`) %>% rename("N to S"=`10010025`, "S to N" =`10010026`)
+breach_data=reshape2::melt(breach_data_wide, id.vars='Date', measure.vars=c('N to S','S to N','Net'), value.name='discharge_cfs', variable.name='site')
 
 
 ### Discharge (not performing currently)
@@ -46,6 +49,7 @@ breach_data=dplyr::rename(breach_data, discharge_cfs=X_00060_00000)
 wq_data=dataRetrieval::readNWISqw(expanded=F,tz="America/Denver",startDate="01-01-2010", endDate=Sys.Date(),
 		siteNumbers=site_list$SiteNumber[site_list$SiteType %in% c("Lake", "Lake, DBL", "Discharge gauge", "Causeway breach","Elevation gauge")],
 		parameterCd=c(
+			"00010",
 			"00098",			
 			"70305",
 			"72263",
@@ -55,6 +59,7 @@ wq_data=dataRetrieval::readNWISqw(expanded=F,tz="America/Denver",startDate="01-0
 )
 
 wq_data=dplyr::rename(wq_data,
+	Temperature_c=p00010,
 	Sampling_depth_m=p00098,
 	Salinity_gL=p70305,
 	Density_gcm3=p72263,
@@ -73,4 +78,16 @@ wq_data=within(wq_data, {
 })
 
 wq_data=merge(wq_data, site_list, by.x='site_no', by.y='SiteNumber')
+
+
+
+
+
+
+
+
+
+
+
+
 
