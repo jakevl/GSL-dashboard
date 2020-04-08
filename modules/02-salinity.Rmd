@@ -15,7 +15,7 @@ sa_sal_gauge=gauge(round(current_sa_sal,1), min=round(sal_min,1), max=round(sal_
 	)
 )
 
-current_na_sal=mean(subset(wq_data, site_no==10010100 & sample_dt>=gauge_date_range[1] & sample_dt<=gauge_date_range[2])$sal_pct, na.rm=T)
+current_na_sal=mean(subset(wq_data, site_no==10010100 & sample_dt>=gauge_date_range[1]-30 & sample_dt<=gauge_date_range[2])$sal_pct, na.rm=T)
 
 na_sal_gauge=gauge(round(current_na_sal,1), min=round(sal_min,1), max=round(sal_max,1), abbreviate=F, symbol = '%', label='Gunnison Bay salinity',
 	sectors=gaugeSectors(

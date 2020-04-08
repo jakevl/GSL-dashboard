@@ -11,7 +11,7 @@ output:
 
 ```{r, init}
 #setwd('C:\\Users\\jvander\\Documents\\R\\gsldb')
-source('modules/init.R')
+source('modules/01-init.Rmd')
 ```
 
 # Salinity
@@ -27,7 +27,7 @@ Salinity is measured... All data from NWIS.
 
 
 ```{r}
-source('modules/salinity.R')
+source('modules/02-salinity.Rmd')
 ```
 
 Row
@@ -58,7 +58,7 @@ Sidebar {.sidebar data-width=300}
 -------------------------------------
 
 ```{r}
-source('modules/elevation.R')
+source('modules/03-elevation.Rmd')
 ```
 
 Row
@@ -89,7 +89,7 @@ elev_ts
 Sidebar {.sidebar data-width=300}
 -------------------------------------
 ```{r}
-source('modules/breach.R')
+source('modules/05-breach.Rmd')
 ```
 
 Row
@@ -113,7 +113,7 @@ breach_disch_hist
 Sidebar {.sidebar data-width=300}
 -------------------------------------
 ```{r}
-source('modules/salt-pools.R')
+source('modules/04-salt-pools.Rmd')
 ```
 
 
@@ -122,6 +122,36 @@ Row
 ###
 ```{r}
 salt_mass_plot
+```
+
+
+# Site map
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+```{r}
+source('modules/06-site-map.Rmd')
+```
+
+
+Row
+-----------------------------------------------------------------------
+###
+```{r}
+site_map
+```
+
+
+
+# Slider map
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+
+Row
+-----------------------------------------------------------------------
+###
+```{r, out.extra='style="border: none;"', out.width='100%'}
+# see: https://github.com/NUKnightLab/juxtapose#html-implementation
+knitr::include_url("slider.html", height="100%")
 ```
 
 
