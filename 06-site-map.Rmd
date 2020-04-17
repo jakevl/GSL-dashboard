@@ -1,12 +1,13 @@
 # Monitoring location map
 
 ## Read site locations
+```{r, site-locs}
 sites=dataRetrieval::readNWISsite(siteNumbers=subset(site_list, SiteType %in% c("Elevation gauge","Causeway breach","Lake", "Lake, DBL"))$SiteNumber)
-
-## Add site metadata to site locations
 sites=merge(sites,site_list, by.x=c("site_no","station_nm"), by.y=c("SiteNumber","SiteName"))
+```
 
 ## Build site map
+```{r, build-site-map}
 sites=within(sites, {
     LatitudeMeasure=dec_lat_va
     LongitudeMeasure=dec_long_va
@@ -15,6 +16,10 @@ sites=within(sites, {
     MonitoringLocationName=station_nm
 })
 site_map=wqTools::buildMap(sites=sites, plot_polys=F, search="") %>% 
-        fitBounds(lng1=min(sites$LongitudeMeasure), lng2=max(sites$LongitudeMeasure), lat1=min(sites$LatitudeMeasure), lat2=max(sites$LatitudeMeasure)) %>% 
-        removeMeasure()
+        leaflet::fitBounds(lng1=min(sites$LongitudeMeasure), lng2=max(sites$LongitudeMeasure), lat1=min(sites$LatitudeMeasure), lat2=max(sites$LatitudeMeasure)) %>% 
+        leaflet::removeMeasure()
+```
+
+```{r, site-map, echo=F, fig.cap="Site location map."}
 site_map
+```

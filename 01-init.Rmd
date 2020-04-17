@@ -1,52 +1,69 @@
+---
+title: "GSL salinity dashboard analyses"
+author: 'Jake Vander Laan (jvander@utah.gov), Utah Division of Water Quality'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+site: bookdown::bookdown_site
+bibliography: C:/Users/jvander/Documents/master-bibliography/bibliography.bib
+link-citations: yes
+colorlinks: yes
+csl: freshwater-science.csl
+output:
+  bookdown::gitbook
+---
 
 # Initial setup
 
 ## Packages
+```{r, packages}
 library(dataRetrieval)
 library(plotly)
 library(flexdashboard)
+```
 
 ## 120 day date range
+```{r, date-range}
 gauge_date_range=c(Sys.Date()-120, Sys.Date())
+```
 
 ## Colors list
+```{r, colors}
 cols=list(
 	list('rgba(200, 30, 30, 0.5)','rgb(200, 30, 30)'),      #red 1
 	list('rgba(245, 121, 58, 0.5)','rgb(245, 121, 58)'),    #orange 2
 	list('rgba(230, 200, 50, 0.5)','rgb(230, 200, 50)'),    #yellow 3
 	list('rgba(60, 230, 70, 0.5)','rgb(60, 230, 70)'),      #green 4
 	list('rgba(15, 32, 128, 0.5)','rgb(15, 32, 128)'),      #blue 5
-	list('rgba(169, 90, 161, 0.5)','rgb(169, 90, 161)')    #purple 6
+	list('rgba(169, 90, 161, 0.5)','rgb(169, 90, 161)')     #purple 6
 	)
-
-
 gauge_cols=c(cols[[4]][[2]],cols[[2]][[2]],cols[[1]][[2]])
+```
 
 ## Data imports
 
 ### Sites
+```{r, sites}
 site_list=read.csv(file="site_list.csv")
+```
 
 ### Elevation
+```{r, elev-import}
 elevation=dataRetrieval::readNWISdv(siteNumbers=site_list$SiteNumber[site_list$SiteType=="Elevation gauge"],parameterCd="62614")
 elevation=dplyr::rename(elevation, elev_ft=X_62614_00003)
 elevation=merge(elevation, site_list, by.x='site_no', by.y='SiteNumber')
+```
 
 
 ### Breach discharge
+```{r, breach-disch-import}
 breach_data=dataRetrieval::readNWISdv(siteNumbers=subset(site_list, SiteType=="Causeway breach")$SiteNumber, parameterCd="00060", startDate = "2010-01-01", endDate = Sys.Date())
 breach_data=dplyr::rename(breach_data, discharge_cfs=X_00060_00003)
 breach_data_wide=reshape2::dcast(breach_data, Date~site_no, value.var='discharge_cfs')
 breach_data_wide = breach_data_wide %>% mutate(Net=`10010025`-`10010026`) %>% rename("N to S"=`10010025`, "S to N" =`10010026`)
 breach_data=reshape2::melt(breach_data_wide, id.vars='Date', measure.vars=c('N to S','S to N','Net'), value.name='discharge_cfs', variable.name='site')
-
-
-### Discharge (not performing currently)
-#discharge=dataRetrieval::readNWISuv(siteNumbers=site_list$SiteNumber[site_list$SiteType=="Discharge gauge"],parameterCd="00060", tz="America/Denver", startDate = "2010-01-01", endDate = Sys.Date())
-#discharge=dplyr::rename(discharge, discharge_cfs=X_00060_00000)
-
+```
 
 ### Salinity (water quality) - Gilbert
+```{r, wq-import}
 wq_data=dataRetrieval::readNWISqw(expanded=F,tz="America/Denver",startDate="01-01-2010", endDate=Sys.Date(),
 		siteNumbers=site_list$SiteNumber[site_list$SiteType %in% c("Lake", "Lake, DBL", "Discharge gauge", "Causeway breach","Elevation gauge")],
 		parameterCd=c(
@@ -79,16 +96,5 @@ wq_data=within(wq_data, {
 })
 
 wq_data=merge(wq_data, site_list, by.x='site_no', by.y='SiteNumber')
-
-
-
-
-
-
-
-
-
-
-
-
+```
 

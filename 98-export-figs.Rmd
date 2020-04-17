@@ -1,0 +1,18 @@
+# Export figures
+```{r, export-figs}
+save(
+    sa_sal_gauge,
+    na_sal_gauge,
+    sal_ts,
+    sa_elev_gauge,
+    na_elev_gauge,
+    elev_ts,
+    salt_mass_plot,
+    breach_disch_ts,
+    breach_disch_hist,
+    site_map,
+    file='dashboard/sal_db_figs.Rdata'
+)
+
+save.image(file='dashboard/all_obs.Rdata')
+```

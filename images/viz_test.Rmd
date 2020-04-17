@@ -1,0 +1,27 @@
+---
+title: "A shrinking Great Salt Lake"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: yeti
+    orientation: rows
+    css: extra.css
+    source_code: "https://github.com/utah-dwq/GSL-dashboard"
+    social: menu
+---
+
+Row
+-----------------------------------------------------------------------
+### **Before-and-after**
+```{r, echo=F, out.width= "65%", out.width= "65%", out.extra='style="border: none; float:right; padding:10px"'}
+# see: https://github.com/NUKnightLab/juxtapose#html-implementation
+knitr::include_url("slider.html", height="100%")
+```
+Water surface elevation of Gilbert Bay in the summer of 2002 was approximately 4,200 ft (m), about the long-term average for the lake. Since then, 
+the lake elevation has dropped 7-8 feet to 4,193 feet in the summer of 2019, and approached a record low in 2018. This has resulted in xx square miles of 
+exposed lakebed.
+
+### **Long term trend**
+```{r}
+elev_ts
+```
+

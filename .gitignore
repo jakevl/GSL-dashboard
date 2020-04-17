@@ -1,2 +1,3 @@
-
-gsldb.html
+_book
+*.html
+*.Rdata

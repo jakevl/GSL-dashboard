@@ -1,0 +1,49 @@
+# Breach
+
+```{r, breach-init}
+library(crosstalk)
+share_df=highlight_key(breach_data_wide)
+```
+
+```{r, breach-disch-ts}
+breach_disch_ts=plot_ly(data=share_df, x=~Date) %>%
+	add_markers(y=~Net)  %>%
+	#add_markers(y=~`N to S`)  %>%
+	#add_markers(y=~`S to N`)# %>%
+	#highlight(on = "plotly_selected", dynamic = TRUE)
+	highlight(
+		on = "plotly_selected",
+		off = "plotly_deselect",
+		dynamic = FALSE, 
+		selectize = FALSE, 
+		selected = attrs_selected(opacity = 0.8)
+	) %>%
+	layout(
+		xaxis = list(title = ""),
+		yaxis = list(title = 'Daily mean net discharge (cfs, S to N)')
+	) %>% 
+	config(displaylogo = FALSE,
+		modeBarButtonsToRemove = c(
+			'sendDataToCloud',
+			'hoverClosestCartesian',
+			'hoverCompareCartesian'
+		)
+	)
+breach_disch_ts
+```
+
+```{r, breach-disch-hist}
+breach_disch_hist=plot_ly(data=share_df, x=~Net, type='histogram') %>% layout(barmode = "overlay", showlegend = FALSE) %>%
+	layout(
+		yaxis = list(title = "Frequency"),
+		xaxis = list(title = 'Daily mean net discharge (cfs, S to N)')
+	) %>% 
+	config(displaylogo = FALSE,
+		modeBarButtonsToRemove = c(
+			'sendDataToCloud',
+			'hoverClosestCartesian',
+			'hoverCompareCartesian'
+		)
+	)
+breach_disch_hist
+```
