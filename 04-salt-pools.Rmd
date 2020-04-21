@@ -2,25 +2,36 @@
 
 ## Introduction
 This analysis applies the approach from Naftz [-@naftz_inputs_2017] to calculate Gilbert Bay deep brine layer (DBL) & upper brine layer (UBL) volumes and constituent masses to estimate salt masses within Gilbert Bay by brine layer. 
-There are two main differences between this analysis and the Naftz approach. First, I incorporated all available data from all sites in Gilbert Bay in addition to the four monitoring 
-locations used in Naftz [-@naftz_inputs_2017]. Second, I did not fill missing data by month and site with the previous observed value. Any month with no salinity results available 
-for a brine layer will produce an NA result.
+Data are all from USGS NWIS.
+
+## Objectives
+
+1. Estimate Gilbert Bay brine layer salt pools
+2. Replicate the Naftz [-@naftz_inputs_2017] nitrogent pool estimates
+3. Automate the pool estimate process to allow rapid updates and application to other constituents
 
 ## General methods
+To estimate salt pools:
 1. Estimate monthly UBL and DBL volumes
 2. Estimate monthly average brine layer salinities
 3. Multiply volumes by salinities to estimate masses
 
+There are two main differences between this analysis and the Naftz approach:  
+1. I incorporated all available data from all sites in Gilbert Bay in addition to the four monitoring locations used in Naftz [-@naftz_inputs_2017].  
+2. I did not fill missing data by month and site with the previous observed value. Any month with no salinity results available for a brine layer will produce an NA result.
+
+### Brine layer volume estimates
 Monthly UBL and DBL volumes were estimated from daily Gilbert Bay water surface elevation measurements via surface elevation to DBL elevation and DBL elevation to DBL volume relationships developed as presented in 
 supplementary material 7 from Naftz [-@naftz_inputs_2017] and developed by Baskin [-@baskin_calculation_2005]. These relationships were based on observations from 2010-2014 spanning Gilbert Bay surface water elevations from about 1278-1279 m (~4193-4196 ft). 
-DBL volumes are estimated for north and south DBL basins separately.  
+DBL volumes are estimated for north and south DBL basins separately. Note that the model terms presented in Naftz [-@naftz_inputs_2017] supplementary material 7 were rounded, so I re-modeled these relationships to generate the surface elevation to volume 
+relationships.  
 
-? volume curves from Baskin USGS  
-
-I estimated monthly average salinities in each brine layer by averaging all salinity samples collected within each brine layer. Samples were assigned to a brine layer by site location and depth.
+### Brine layer salinity estimates
+Salinities calculated from density via the GSL equation of state [@naftz_equation_2011] were used to estimate brine layer salinities. I estimated monthly average salinities in each brine layer by averaging all salinity samples collected within each brine layer. Samples were assigned to a brine layer by site location and depth.
 DBL samples were defined as those occurring at sites 405356112205601 (south) or 410644112382601 (north) and with sampling depth >= 5 meters (see map, \@ref(fig:site-map)). 
 UBL samples were defined as any sample in Gilbert Bay <= 2 meters sampling depth. 
 
+### Mass calculations
 Salt masses are estimated by multiplying monthly brine layer volumes by monthly average salinities (mass/volume). The north and south DBL basin masses were summed to simplify plots.  
 
 ## Validation
@@ -75,7 +86,7 @@ sal_flat=subset(sal_flat, Bay=='Gilbert' & !is.na(sal_flat$rel_depth) & SiteType
 ```
 
 
-### ID WQ samples as UBL or DBL representatives, convert g/L to mg/L
+### ID WQ samples as UBL or DBL representatives
 Defined DBL samples as those occurring at sites 405356112205601 or 410644112382601 and with sampling depth >= 5 meters (see map).  
 Defined UBL samples as any sample in Gilbert Bay >= 2 meters sampling depth. 
 ```{r, id-dbl}
@@ -84,9 +95,6 @@ sal_flat=within(sal_flat, {
 	bl[site_no==405356112205601 & Sampling_depth_m >=5] = 'DBLs'
 	bl[site_no==410644112382601 & Sampling_depth_m >=5] = 'DBLn'
 	bl[Bay=='Gilbert' & Sampling_depth_m <=2] = 'UBL'
-	variable=as.character(variable)
-	value[variable=='Salinity_gL'] = value
-	variable[variable=='Salinity_gL'] = 'Salinity_mgL'
 	year=lubridate::year(sample_dt)
 	month=lubridate::month(sample_dt)
 })
@@ -101,13 +109,15 @@ mon_means=dplyr::rename(mon_means, DBL_mean_s=DBLs, DBL_mean_n=DBLn, UBL_mean=UB
 ```
 
 ### Calculate masses
-gb_pool_data=gb_pool_data[order(gb_pool_data$YrMo),]
 ```{r calc-mass}
 gb_pool_data=merge(gb_vol_YrMo, mon_means)
 gb_pool_data=within(gb_pool_data, {
-	UBL_mass_kg=UBL_vol_m3*UBL_mean
+	UBL_mass_kg=UBL_vol_m3*UBL_mean # g/L * m3 * 1000 L / 1 m3 * 1 kg / 1,000,000 mg
 	DBL_mass_kg=(DBL_mean_n*DBL_vol_N_m3 + DBL_mean_s*DBL_vol_S_m3)
 	tot_mass_kg=DBL_mass_kg+UBL_mass_kg
+	UBL_mass_mton=UBL_mass_kg/1000
+	DBL_mass_mton=DBL_mass_kg/1000
+	tot_mass_mton=tot_mass_kg/1000
 	YrMo=as.Date(paste0(year,"-",month,"-01"),format='%Y-%m-%d')
 })
 ```
@@ -115,23 +125,23 @@ gb_pool_data=within(gb_pool_data, {
 ### Salt mass plot
 ```{r, salt-mass-plot}
 salt_mass_plot=plot_ly(data=gb_pool_data) %>%
-	add_trace(type='scatter', y=~tot_mass_kg, x=~YrMo, mode = 'markers', name='Total', marker = list(color = cols[[5]][[1]],size = 10,line = list(color = cols[[5]][[2]],width = 2))) %>% #, line = list(color = cols[[5]][[2]],width = 2)) %>%
-	add_trace(type='scatter', y=~DBL_mass_kg, x=~YrMo, mode = 'markers', name='Deep brine layer', marker = list(symbol=2, color = cols[[2]][[1]],size = 10,line = list(color = cols[[2]][[2]],width = 2))) %>% #, line = list(color = cols[[2]][[2]],width = 2)) %>%
-	add_trace(type='scatter', y=~UBL_mass_kg, x=~YrMo, mode = 'markers', name='Upper brine layer', marker = list(symbol=4, color = cols[[6]][[1]],size = 10,line = list(color = cols[[6]][[2]],width = 2))) %>% #,line = list(color = cols[[6]][[2]],width = 2)) %>%
-	layout(title = "Gilbert Bay salt pool",
-		xaxis = list(title = "", range=c(as.numeric(gauge_date_range[2]-365*10)*86400000,as.numeric(gauge_date_range[2])*86400000)),
-		yaxis = list(side = 'left', title = 'Salt mass (kg)'),
-		legend = list(x = 0.85, y = 1)
-		) %>% 
-		config(displaylogo = FALSE,
-			modeBarButtonsToRemove = c(
-				'sendDataToCloud',
-				'hoverClosestCartesian',
-				'hoverCompareCartesian',
-				'lasso2d',
-				'select2d'
+			add_trace(type='scatter', y=~tot_mass_mton, x=~YrMo, mode = 'markers', name='Total', marker = list(symbol=4, color = cols[[6]][[1]],size = 10,line = list(color = cols[[6]][[2]],width = 2))) %>% #, line = list(color = cols[[5]][[2]],width = 2)) %>%
+			add_trace(type='scatter', y=~UBL_mass_mton, x=~YrMo, mode = 'markers', name='Upper brine layer', marker = list(color = cols[[5]][[1]],size = 10,line = list(color = cols[[5]][[2]],width = 2))) %>% #,line = list(color = cols[[6]][[2]],width = 2)) %>%
+			add_trace(type='scatter', y=~DBL_mass_mton, x=~YrMo, mode = 'markers', name='Deep brine layer', marker = list(symbol=2, color = cols[[2]][[1]],size = 10,line = list(color = cols[[2]][[2]],width = 2))) %>% #, line = list(color = cols[[2]][[2]],width = 2)) %>%
+			layout(title = "Gilbert Bay salt pool",
+				xaxis = list(title = "", range=c(as.numeric(gauge_date_range[2]-365*10)*86400000,as.numeric(gauge_date_range[2])*86400000)),
+				yaxis = list(side = 'left', title = 'Salt mass (metric tons)'),
+				legend = list(x = 0.85, y = 1)
+			) %>% 
+			config(displaylogo = FALSE,
+				modeBarButtonsToRemove = c(
+					'sendDataToCloud',
+					'hoverClosestCartesian',
+					'hoverCompareCartesian',
+					'lasso2d',
+					'select2d'
+				)
 			)
-		)
 ```
 
 ## Results
@@ -140,18 +150,23 @@ salt_mass_plot
 #crosstalk::bscols(widths=6, salt_mass_plot, elev_ts, sal_ts, site_map)
 ```
 
-## Discussion
-*Estimate mass by each individual sample, rather than aggregating to monthly means. Use variability 
-in these estimates to help characterize variability overall.
-
-Recommend expanding the empirical WSE:DBL elevation and volume relationships to other lake elevations as possible. Current analysis period is generally within calibration range, but any lower, and DBL volume may be suspect. 
-Lake levels have spanned the entire calibration range in this study period.
-
-Consistency with salinity input measurements (TDS modeled from specific conductance). Salt pools are based on salinity from density via equation of state.
+Prior to breach opening, the total salt pool in Gilbert Bay was relatively stable, with just under 20% of the salt pool accounted for in the DBL when still present. The DBL salt pool mixed into the UBL pool when flow between Gilbert and Gunnison Bays was 
+cut off (Aug 2014 - Dec 2016). A decrease in the Gilbert Bay salt pool is apparent following the opening of the causeway breach.  
 
 Although DBL samples are apparent in Gilbert Bay, the mass of salt in the DBL is small due to relatively small volume. Recent lake levels are at the very bottom of the WSE:DBL volume relationship. 
-DBL volume is fixed at minimum values at these lake elevations in these calculations.
+DBL volume is fixed at minimum values at these lake elevations in this calculation.  
 
-DBL mass estimate gaps (density to salinity conversion masked values)
+## Discussion
 
-Spatial interpolation or weighted averaging of UBL salinities.
+
+- Expand the empirical WSE:DBL elevation and volume relationships to other lake elevations as possible.
+
+- Characterize error & sampling variability.
+
+- Consistency with other salt budget components. Salt pools are based on salinity from density via equation of state.
+
+- DBL mass estimate gaps resulting from density to salinity conversion masked values (densities exceeding equation of state calibration).
+
+- Consider appropriate platforms for communicating, documenting, and integrating SAC analyses.
+
+

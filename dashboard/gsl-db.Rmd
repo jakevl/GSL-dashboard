@@ -10,8 +10,8 @@ output:
 ---
 
 ```{r, init}
-#setwd('C:\\Users\\jvander\\Documents\\R\\gsldb')
-source('modules/01-init.Rmd')
+#setwd('C:\\Users\\jvander\\Documents\\R\\gsldb\\dashboard')
+load('sal_db_figs.Rdata') 
 ```
 
 # Salinity
@@ -25,10 +25,6 @@ Salinity is measured... All data from NWIS.
 <br>
 **Gunnison Bay salinity** is the average of measurements from last 120 days at the Gunnison Bay near Saline, UT gauge.
 
-
-```{r}
-source('modules/02-salinity.Rmd')
-```
 
 Row
 -----------------------------------------------------------------------
@@ -57,9 +53,6 @@ sal_ts
 Sidebar {.sidebar data-width=300}
 -------------------------------------
 
-```{r}
-source('modules/03-elevation.Rmd')
-```
 
 Row
 -----------------------------------------------------------------------
@@ -88,9 +81,6 @@ elev_ts
 # Breach flows
 Sidebar {.sidebar data-width=300}
 -------------------------------------
-```{r}
-source('modules/05-breach.Rmd')
-```
 
 Row
 -----------------------------------------------------------------------
@@ -112,9 +102,6 @@ breach_disch_hist
 # Gilbert Bay salt pools
 Sidebar {.sidebar data-width=300}
 -------------------------------------
-```{r}
-source('modules/04-salt-pools.Rmd')
-```
 
 
 Row
@@ -128,9 +115,6 @@ salt_mass_plot
 # Site map
 Sidebar {.sidebar data-width=300}
 -------------------------------------
-```{r}
-source('modules/06-site-map.Rmd')
-```
 
 
 Row
@@ -151,7 +135,7 @@ Row
 ###
 ```{r, out.extra='style="border: none;"', out.width='100%'}
 # see: https://github.com/NUKnightLab/juxtapose#html-implementation
-knitr::include_url("slider.html", height="100%")
+knitr::include_url("images/slider.html", height="100%")
 ```
 
 
