@@ -3,3 +3,4 @@ _book
 *.Rdata
 lib
 ~$JVL_DNaftz_comparison.xlsx
+rsconnect

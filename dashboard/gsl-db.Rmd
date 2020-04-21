@@ -19,7 +19,10 @@ Sidebar {.sidebar data-width=300}
 -------------------------------------
 
 ### Salinity in Great Salt Lake
-Salinity is measured... All data from NWIS. 
+**NOTE:**
+This is a draft and discussion version of a potential GSL salinity dashboard. This dashboard does not convey any official positions.  
+
+Salinity is measured... All data were downloaded from [USGS NWIS](https://waterdata.usgs.gov/nwis){target="_blank"}. 
 
 **Gilbert Bay salinity** is characterized by the average of open water Gilbert Bay surface samples in the last 120 days.  
 <br>
@@ -102,7 +105,7 @@ breach_disch_hist
 # Gilbert Bay salt pools
 Sidebar {.sidebar data-width=300}
 -------------------------------------
-
+[Details and source code for these estimates](https://bookdown.org/jakevl/gsldb-analyses/){target="_blank"}
 
 Row
 -----------------------------------------------------------------------
@@ -133,11 +136,18 @@ Sidebar {.sidebar data-width=300}
 Row
 -----------------------------------------------------------------------
 ###
-```{r, out.extra='style="border: none;"', out.width='100%'}
+```{r, out.extra='style="border: none;"', out.width='100%', eval=F}
 # see: https://github.com/NUKnightLab/juxtapose#html-implementation
 knitr::include_url("images/slider.html", height="100%")
 ```
 
+<div id="juxtapose-wrapper" class="juxtapose" data-startingposition="20%" style="width: 600px">
+<div class="juxtapose">
+   <img src="images/ja_2019.png" data-label="2019" />
+   <img src="images/ja_2002.png" data-label="2002" />
+</div>
+<script src="https://cdn.knightlab.com/libs/juxtapose/latest/js/juxtapose.min.js"></script>
+<link rel="stylesheet" href="https://cdn.knightlab.com/libs/juxtapose/latest/css/juxtapose.css">
 
 
 <style>

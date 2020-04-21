@@ -10,7 +10,7 @@ runtime: shiny
 ---
 
 ```{r, init}
-setwd('C:\\Users\\jvander\\Documents\\R\\gsldb\\dashboard')
+#setwd('C:\\Users\\jvander\\Documents\\R\\gsldb\\dashboard')
 load('all_obs.Rdata')
 ```
 
@@ -67,7 +67,7 @@ figs_app=shinyApp(
 			layout(title = "Gilbert Bay salt pool",
 				xaxis = list(title = "", range=c(as.numeric(min_date())*86400000,as.numeric(max_date())*86400000)),
 				yaxis = list(side = 'left', title = 'Salt mass (metric tons)'),
-				legend = list(x = 0.85, y = 1)
+				legend = list(x = 0.7, y = 1)
 			) %>% 
 			config(displaylogo = FALSE,
 				modeBarButtonsToRemove = c(

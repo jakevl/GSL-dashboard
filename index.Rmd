@@ -1,0 +1,37 @@
+---
+title: "GSL salinity dashboard analyses"
+author: 'Jake Vander Laan (jvander@utah.gov), Utah Division of Water Quality'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+site: bookdown::bookdown_site
+bibliography: C:/Users/jvander/Documents/master-bibliography/bibliography.bib
+link-citations: yes
+colorlinks: yes
+csl: freshwater-science.csl
+github-repo: "jakevl/GSL-dashboard"
+output:
+  bookdown::gitbook:
+    css: extra.css
+    config:
+      edit : https://github.com/jakevl/GSL-dashboard/blob/master/%s
+      download: null
+      sharing:
+        facebook: no
+        github: no
+        twitter: no
+        linkedin: no
+        weibo: no
+        instapaper: no
+        vk: no
+        all: no
+      info: yes
+---
+
+.book .book-body .page-wrapper .page-inner {
+  max-width: 90%;
+}
+
+
+# Preface {-}
+
+This document includes a series of Great Salt Lake salinity and elevation analyses for discussion with the Great Salt Lake Salinity Advisory Committee. The figures generated in this document 
+are intended for inclusion in a Great Salt Lake salinity dashboard. All data are drawn from [USGS NWIS](https://waterdata.usgs.gov/nwis).
