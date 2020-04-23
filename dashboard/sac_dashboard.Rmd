@@ -9,143 +9,160 @@ output:
 runtime: shiny
 ---
 
-```{r, init}
-#setwd('C:\\Users\\jvander\\Documents\\R\\gsldb\\dashboard')
-load('all_obs.Rdata')
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+#### Result summary
+- Total salt pool was stable prior to breach opening
+- About 20% of the salt pool accounted for in the DBL
+- DBL salt pool mixed into the UBL pool when culverts were closed (Aug 2014 - Dec 2016)
+- Gilbert Bay salt decreased following the opening of the causeway breach.  
+- Although DBL currently exists in Gilbert Bay, the mass of salt in the DBL is small due to small volume
+- Recent lake levels are at the very bottom of the WSE:DBL volume relationship
+
+<br>
+
+#### Causeway timeline
+* November 2012: West culvert closed  
+* December 2013: East culvert closed  
+* December 2016: Causeway breached under bridge  
+
+<br>
+
+#### Re-scale plot x-axes
+```{r}
+sliderInput("year_range", "",
+	min = 2010,
+     max = 2020,
+     value=c(2011, 2020),
+	sep=""
+)
 ```
 
 
 ```{r}
+load('all_obs.Rdata')
 library(leaflet)
 library(plotly)
 options(warn=-1)
-figs_app=shinyApp(
-	ui <- fillPage(
-		fillRow(height="10%", fillCol( 
-			#sliderInput("date_range", "",
-			#	min = as.Date(gauge_date_range[2]-365*10),
-            #    max = as.Date(gauge_date_range[2]),
-            #    value=c(as.Date(gauge_date_range[2]-365*10),as.Date(gauge_date_range[2]))
-            #)
-			sliderInput("year_range", "",
-				min = 2010,
-                max = 2020,
-                value=c(2011, 2020),
-				sep=""
-			)
-		)),
-		#br(),
-		fillRow(height="45%", 
-			fillCol(plotlyOutput("salt_mass_plot", height = "100%")),
-			fillCol(plotlyOutput("elev_plot", height = "100%"))
-		),
-		#fillRow(height="10%"),
-		fillRow(height="45%", 
-			fillCol(plotlyOutput("sal_ts", height = "100%")),
-			fillCol()
-			#fillCol(leafletOutput("site_map", height='100%'))
+
+# Extract dates
+min_date=reactive({
+	as.Date(paste0(input$year_range[1],"-01-01"))	
+})
+max_date=reactive({
+	as.Date(paste0(input$year_range[2],"-12-31"))	
+})
+
+# Make plots
+## Salt mass plot
+output$salt_mass_plot=renderPlotly({
+	plot_ly(data=gb_pool_data) %>%
+	add_trace(type='scatter', y=~tot_mass_mton, x=~YrMo, mode = 'markers', name='Total', marker = list(symbol=4, color = cols[[6]][[1]],size = 10,line = list(color = cols[[6]][[2]],width = 2))) %>% #, line = list(color = cols[[5]][[2]],width = 2)) %>%
+	add_trace(type='scatter', y=~UBL_mass_mton, x=~YrMo, mode = 'markers', name='Upper brine layer', marker = list(color = cols[[5]][[1]],size = 10,line = list(color = cols[[5]][[2]],width = 2))) %>% #,line = list(color = cols[[6]][[2]],width = 2)) %>%
+	add_trace(type='scatter', y=~DBL_mass_mton, x=~YrMo, mode = 'markers', name='Deep brine layer', marker = list(symbol=2, color = cols[[2]][[1]],size = 10,line = list(color = cols[[2]][[2]],width = 2))) %>% #, line = list(color = cols[[2]][[2]],width = 2)) %>%
+	layout(title = "Gilbert Bay salt pool",
+		xaxis = list(title = "", range=c(as.numeric(min_date())*86400000,as.numeric(max_date())*86400000)),
+		yaxis = list(side = 'left', title = 'Salt mass (metric tons)'),
+		legend = list(x = 0.01, y = 0.4)
+	) %>% 
+	config(displaylogo = FALSE,
+		modeBarButtonsToRemove = c(
+			'sendDataToCloud',
+			'hoverClosestCartesian',
+			'hoverCompareCartesian',
+			'lasso2d',
+			'select2d'
 		)
-	),
-	
-	server <- function(input, output, session) {
-		
-		# Extract dates
-		min_date=reactive({
-			as.Date(paste0(input$year_range[1],"-01-01"))	
-		})
-		max_date=reactive({
-			as.Date(paste0(input$year_range[2],"-12-31"))	
-		})
-		
-		
-		## Salt mass plot
-		output$salt_mass_plot=renderPlotly({
-			plot_ly(data=gb_pool_data) %>%
-			add_trace(type='scatter', y=~tot_mass_mton, x=~YrMo, mode = 'markers', name='Total', marker = list(symbol=4, color = cols[[6]][[1]],size = 10,line = list(color = cols[[6]][[2]],width = 2))) %>% #, line = list(color = cols[[5]][[2]],width = 2)) %>%
-			add_trace(type='scatter', y=~UBL_mass_mton, x=~YrMo, mode = 'markers', name='Upper brine layer', marker = list(color = cols[[5]][[1]],size = 10,line = list(color = cols[[5]][[2]],width = 2))) %>% #,line = list(color = cols[[6]][[2]],width = 2)) %>%
-			add_trace(type='scatter', y=~DBL_mass_mton, x=~YrMo, mode = 'markers', name='Deep brine layer', marker = list(symbol=2, color = cols[[2]][[1]],size = 10,line = list(color = cols[[2]][[2]],width = 2))) %>% #, line = list(color = cols[[2]][[2]],width = 2)) %>%
-			layout(title = "Gilbert Bay salt pool",
-				xaxis = list(title = "", range=c(as.numeric(min_date())*86400000,as.numeric(max_date())*86400000)),
-				yaxis = list(side = 'left', title = 'Salt mass (metric tons)'),
-				legend = list(x = 0.7, y = 1)
-			) %>% 
-			config(displaylogo = FALSE,
-				modeBarButtonsToRemove = c(
-					'sendDataToCloud',
-					'hoverClosestCartesian',
-					'hoverCompareCartesian',
-					'lasso2d',
-					'select2d'
-				)
-			)
-		})
-		
-		
-		# Elevation time series
-		output$elev_plot=renderPlotly({
-			plot_ly() %>%
-			add_lines(data=subset(elevation, Bay=="Gilbert"), y=~elev_ft, x=~Date, name="Gilbert",
-				line = list(color = cols[[5]][[2]],width = 2)) %>%
-			add_lines(data=subset(elevation, Bay=="Gunnison"), y=~elev_ft, x=~Date, name="Gunnison",
-				line = list(color = cols[[4]][[2]],width = 2)) %>%
-			layout(title = "Lake elevation",
-				xaxis = list(title = "", range=c(as.numeric(min_date())*86400000,as.numeric(max_date())*86400000)), #rangeslider = list(type = "date")),
-				yaxis = list(title = 'WSE (feet)', range=c(4188,4199)),
-				legend = list(x = 0.01, y = 0.1)
-			) %>% 
-			config(displaylogo = FALSE,
-				modeBarButtonsToRemove = c(
-					'sendDataToCloud',
-					'hoverClosestCartesian',
-					'hoverCompareCartesian',
-					'lasso2d',
-					'select2d'
-				)
-			)
-		})
-		
-		
-		# Salinity time series
-		output$sal_ts=renderPlotly({
-			plot_ly(x=~sample_dt) %>%
-			add_markers(data=wq_data[wq_data$rel_depth=="Bottom" & wq_data$Bay=="Gilbert",], x=~sample_dt, y=~sal_pct, name="Gilbert bottom", visible=T,
-				text=~site_no,
-				marker = list(symbol=2, color = cols[[2]][[1]],size = 10,line = list(color = cols[[2]][[2]],width = 2))
-			) %>% 
-			add_markers(data=wq_data[wq_data$rel_depth=="Surface" & wq_data$Bay=="Gilbert",], x=~sample_dt, y=~sal_pct, name="Gilbert surface", visible=T, 
-				text=~site_no,
-				marker = list(color = cols[[5]][[1]],size = 10,line = list(color = cols[[5]][[2]],width = 2))
-			) %>%
-			add_markers(data=subset(wq_data, site_no==10010100), x=~sample_dt, y=~sal_pct, name="Gunnison", visible=T, 
-				text=~site_no,
-				marker = list(symbol=3, color = cols[[4]][[1]],size = 10,line = list(color = cols[[4]][[2]],width = 2))
-			) %>%
-			layout(
-				xaxis = list(title = "", range=c(as.numeric(min_date())*86400000,as.numeric(max_date())*86400000)),
-				yaxis = list(side = 'left', title = 'Salinity (%)'),
-				legend = list(x = 0.01, y = 0.1)
-			) %>% 
-			config(displaylogo = FALSE,
-				modeBarButtonsToRemove = c(
-					'sendDataToCloud',
-					'hoverClosestCartesian',
-					'hoverCompareCartesian',
-					'lasso2d',
-					'select2d'
-				)
-			)
-		})
-		
-		
-		## Site map
-		#output$site_map=renderLeaflet({
-		#	site_map
-		#})
-	}
-)
+	)
+})
 
-figs_app
 
+## Elevation time series
+output$elev_plot=renderPlotly({
+	plot_ly() %>%
+	add_lines(data=subset(elevation, Bay=="Gilbert"), y=~elev_ft, x=~Date, name="Gilbert",
+		line = list(color = cols[[5]][[2]],width = 2)) %>%
+	add_lines(data=subset(elevation, Bay=="Gunnison"), y=~elev_ft, x=~Date, name="Gunnison",
+		line = list(color = cols[[4]][[2]],width = 2)) %>%
+	layout(title = "Lake elevation",
+		xaxis = list(title = "", range=c(as.numeric(min_date())*86400000,as.numeric(max_date())*86400000)), #rangeslider = list(type = "date")),
+		yaxis = list(title = 'WSE (feet)', range=c(4188,4199)),
+		legend = list(x = 0.01, y = 0.1)
+	) %>% 
+	config(displaylogo = FALSE,
+		modeBarButtonsToRemove = c(
+			'sendDataToCloud',
+			'hoverClosestCartesian',
+			'hoverCompareCartesian',
+			'lasso2d',
+			'select2d'
+		)
+	)
+})
+
+
+## Salinity time series
+output$sal_ts=renderPlotly({
+	plot_ly(x=~sample_dt) %>%
+	add_markers(data=wq_data[wq_data$rel_depth=="Bottom" & wq_data$Bay=="Gilbert",], x=~sample_dt, y=~sal_pct, name="Gilbert bottom", visible=T,
+		text=~site_no,
+		marker = list(symbol=2, color = cols[[2]][[1]],size = 10,line = list(color = cols[[2]][[2]],width = 2))
+	) %>% 
+	add_markers(data=wq_data[wq_data$rel_depth=="Surface" & wq_data$Bay=="Gilbert",], x=~sample_dt, y=~sal_pct, name="Gilbert surface", visible=T, 
+		text=~site_no,
+		marker = list(color = cols[[5]][[1]],size = 10,line = list(color = cols[[5]][[2]],width = 2))
+	) %>%
+	add_markers(data=subset(wq_data, site_no==10010100), x=~sample_dt, y=~sal_pct, name="Gunnison", visible=T, 
+		text=~site_no,
+		marker = list(symbol=3, color = cols[[4]][[1]],size = 10,line = list(color = cols[[4]][[2]],width = 2))
+	) %>%
+	layout(title = "GSL salinity",
+		xaxis = list(title = "", range=c(as.numeric(min_date())*86400000,as.numeric(max_date())*86400000)),
+		yaxis = list(side = 'left', title = 'Salinity (%)'),
+		legend = list(x = 0.01, y = 0.1)
+	) %>% 
+	config(displaylogo = FALSE,
+		modeBarButtonsToRemove = c(
+			'sendDataToCloud',
+			'hoverClosestCartesian',
+			'hoverCompareCartesian',
+			'lasso2d',
+			'select2d'
+		)
+	)
+})
+
+
+## Site map
+#output$site_map=renderLeaflet({
+#	site_map
+#})
+
+## Blank
+#output$blank=renderPlot({
+#	plot.new()
+#})
+
+```
+
+
+
+Row
+-----------------------------------------------------------------------
+
+```{r}
+fillCol(plotlyOutput("salt_mass_plot", height="95%"), height="100%")
+fillCol(plotlyOutput("elev_plot", height="95%"), height="100%")
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+```{r}
+fillCol(plotlyOutput("sal_ts", height="95%"), height="100%")
+#leafletOutput("site_map", height="90%")
+fillCol(plotOutput("blank", height="95%"), height="100%")
 ```
 
 

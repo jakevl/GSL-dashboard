@@ -132,6 +132,8 @@ site_map
 # Slider map
 Sidebar {.sidebar data-width=300}
 -------------------------------------
+Satellite imagery of Great Salt Lake in the summer of 2002, at an elevation of about 4,200 ft (approximate long-term average lake elevation) versus 
+the summer of 2019 with the lake at an elevation of about 4,192 ft.
 
 Row
 -----------------------------------------------------------------------
