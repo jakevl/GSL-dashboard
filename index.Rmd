@@ -3,10 +3,6 @@ title: "GSL salinity dashboard analyses"
 author: 'Jake Vander Laan (jvander@utah.gov), Utah Division of Water Quality'
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 site: bookdown::bookdown_site
-bibliography: C:/Users/jvander/Documents/master-bibliography/bibliography.bib
-link-citations: yes
-colorlinks: yes
-csl: freshwater-science.csl
 github-repo: "jakevl/GSL-dashboard"
 output:
   bookdown::gitbook:

@@ -1,5 +1,5 @@
 ---
-title: "Great Salt Lake Salinity Dashboard"
+title: "Great Salt Lake Water Quality Dashboard"
 output: 
   flexdashboard::flex_dashboard:
     theme: yeti
@@ -13,6 +13,49 @@ output:
 #setwd('C:\\Users\\jvander\\Documents\\R\\gsldb\\dashboard')
 load('sal_db_figs.Rdata') 
 ```
+
+
+
+# Overview map
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+
+
+Row
+-----------------------------------------------------------------------
+###
+```{r}
+au_map
+```
+
+
+# Elevation
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+
+
+Row
+-----------------------------------------------------------------------
+### 
+```{r}
+sa_elev_gauge
+```
+
+### 
+```{r}
+na_elev_gauge
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Time series
+```{r}
+elev_ts
+```
+
+
 
 # Salinity
 Sidebar {.sidebar data-width=300}
@@ -51,85 +94,7 @@ sal_ts
 ```
 
 
-
-# Elevation
-Sidebar {.sidebar data-width=300}
--------------------------------------
-
-
-Row
------------------------------------------------------------------------
-### 
-```{r}
-sa_elev_gauge
-```
-
-### 
-```{r}
-na_elev_gauge
-```
-
-
-Row
------------------------------------------------------------------------
-
-### Time series
-```{r}
-elev_ts
-```
-
-
-
-
-# Breach flows
-Sidebar {.sidebar data-width=300}
--------------------------------------
-
-Row
------------------------------------------------------------------------
-### Breach flows
-```{r}
-breach_disch_ts
-```
-
-Row
------------------------------------------------------------------------
-### 
-```{r}
-breach_disch_hist
-```
-
-
-
-
-# Gilbert Bay salt pools
-Sidebar {.sidebar data-width=300}
--------------------------------------
-[Details and source code for these estimates](https://bookdown.org/jakevl/gsldb-analyses/){target="_blank"}
-
-Row
------------------------------------------------------------------------
-###
-```{r}
-salt_mass_plot
-```
-
-
-# Site map
-Sidebar {.sidebar data-width=300}
--------------------------------------
-
-
-Row
------------------------------------------------------------------------
-###
-```{r}
-site_map
-```
-
-
-
-# Slider map
+# Satellite
 Sidebar {.sidebar data-width=300}
 -------------------------------------
 Satellite imagery of Great Salt Lake in the summer of 2002, at an elevation of about 4,200 ft (approximate long-term average lake elevation) versus 
@@ -160,6 +125,10 @@ bottom: 0.5em;
 left: 0.5em;
 }
 </style>
+
+
+
+
 
 
 

@@ -23,3 +23,24 @@ site_map=wqTools::buildMap(sites=sites, plot_polys=F, search="") %>%
 ```{r, site-map, echo=F, fig.cap="Site location map."}
 site_map
 ```
+
+
+
+## Build AU map
+
+```{r, build-au-map}
+library(leaflet)
+aus=c("UT-L-16020310-002_00","UT-L-16020310-001_00","UT-L-16020310-003_00","UT-L-16020310-004_00")
+gsl_au_poly=subset(wqTools::au_poly, ASSESS_ID %in% aus)
+bbox=sf::st_bbox(gsl_au_poly)
+
+au_map=wqTools::baseMap() %>% clearGroup("Assessment units") %>% 
+	addPolygons(data=gsl_au_poly, group="Assessment units",fillOpacity = 0.1, layerId=gsl_au_poly$polyID,weight=3,color="orange", options = pathOptions(pane = "au_poly"),
+		label=(gsl_au_poly$AU_NAME)
+	) %>%
+	showGroup("Assessment units") %>% 
+	fitBounds(bbox$xmin[[1]], bbox$ymin[[1]], bbox$xmax[[1]], bbox$ymax[[1]])
+```
+
+
+

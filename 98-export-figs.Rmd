@@ -11,6 +11,7 @@ save(
     breach_disch_ts,
     breach_disch_hist,
     site_map,
+	au_map,
     file='dashboard/sal_db_figs.Rdata'
 )
 

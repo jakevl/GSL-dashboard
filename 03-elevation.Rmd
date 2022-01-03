@@ -4,7 +4,16 @@
 ```{r, elev-gauges}
 elev_summ=dplyr::summarize(elevation, elev_min=round(min(elev_ft),1), elev_max=round(max(elev_ft),1), elev_mean=round(mean(elev_ft),1))
 
-current_sa_elev=subset(elevation, site_no=='10010000' & Date==max(Date))$elev_ft
+current_sa_elev=subset(elevation, site_no=='10010000')
+current_sa_elev=subset(current_sa_elev, Date==max(Date))$elev_ft
+sa_elev_gauge=gauge(current_sa_elev, min=elev_summ$elev_min, max=elev_summ$elev_max, abbreviate=F, symbol = ' ft', label='Gilbert Bay elev',
+	sectors=gaugeSectors(
+		colors=gauge_cols,
+		success=c(4198,4206),
+		warning=c(4196,4208),
+		danger=c(elev_summ$elev_min, elev_summ$elev_max)
+	)
+)
 sa_elev_gauge=gauge(current_sa_elev, min=elev_summ$elev_min, max=elev_summ$elev_max, abbreviate=F, symbol = ' ft', label='Gilbert Bay elev',
 	sectors=gaugeSectors(
 		colors=gauge_cols,
@@ -14,8 +23,8 @@ sa_elev_gauge=gauge(current_sa_elev, min=elev_summ$elev_min, max=elev_summ$elev_
 	)
 )
 
-
-current_na_elev=subset(elevation, site_no=='10010100' & Date==max(Date))$elev_ft
+current_na_elev=subset(elevation, site_no=='10010100')
+current_na_elev=subset(current_na_elev, Date==max(Date))$elev_ft
 
 na_elev_gauge=gauge(current_na_elev, min=elev_summ$elev_min, max=elev_summ$elev_max, abbreviate=F, symbol = ' ft', label='Gunnison Bay elev',
 	sectors=gaugeSectors(
@@ -35,13 +44,13 @@ na_elev_gauge
 ```{r, elev-ts}
 elev_ts=
 	plot_ly() %>%
-		add_lines(data=subset(elevation, Bay=="Gilbert"), y=~elev_ft, x=~Date, name="Gilbert",
+		add_lines(data=subset(elevation, Bay=="Gilbert"), y=~elev_ft, x=~Date, name="Gilbert Bay (South arm)",
 			line = list(color = cols[[5]][[2]],width = 2)) %>%
-		add_lines(data=subset(elevation, Bay=="Gunnison"), y=~elev_ft, x=~Date, name="Gunnison",
+		add_lines(data=subset(elevation, Bay=="Gunnison"), y=~elev_ft, x=~Date, name="Gunnison Bay (North arm)",
 			line = list(color = cols[[4]][[2]],width = 2)) %>%
 		layout(title = "Lake elevation",
-			xaxis = list(title = "", range=c(as.numeric(gauge_date_range[2]-365*10)*86400000,as.numeric(gauge_date_range[2])*86400000), rangeslider = list(type = "date")),
-			yaxis = list(title = 'WSE (feet)', range=c(4188,4199)),
+			xaxis = list(title = "", range=c(as.numeric(gauge_date_range[2]-365*50)*86400000,as.numeric(gauge_date_range[2])*86400000), rangeslider = list(type = "date")),
+			yaxis = list(title = 'WSE (feet)'),
 			legend = list(x = 0.01, y = 0.1)
 		) %>% 
 		config(displaylogo = FALSE,
