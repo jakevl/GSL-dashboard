@@ -1,0 +1,67 @@
+
+# Introduction
+This page documents the data analysis process used to assess selenium in bird egg tissue for bird eggs collected in the Gilbert Bay assessment unit. 
+The applicable criterion for Se in bird eggs for Gilbert Bay is a nesting season geomean of 12.5 mg/kg dry weight ([UAC R317-2-14, table 2.14.2](https://rules.utah.gov/publicat/code/r317/r317-002.htm#T16){target="_blank"}). 
+All data used in this assessment are reported as dry weight. 
+
+------
+
+# Read data
+```{r, read-data}
+results=as.data.frame(readxl::read_excel('gsl_egg_se_data.xlsx', 'Se results'))
+results$year=lubridate::year(results$SampleDate)
+names(results)=gsub(" ", "", names(results))
+names(results)[names(results)=='MonitoringLocationID']='MonitoringLocationIdentifier'
+```
+
+# Subset to Gilbert Bay sites
+```{r, subset-gb}
+dim(results)
+results=subset(results, MonitoringLocationIdentifier!='FARM')
+```
+
+# Boxplot
+```{r, boxplot, message=FALSE, warning=FALSE, fig.cap='Figure 2. Boxplot of egg selenium concentrations among sites and years in the Gilbert Bay assessment unit.'}
+library(plotly)
+
+hline <- function(y = 0, color = "red") {
+  list(
+    type = "line",
+    x0 = 0,
+    x1 = 1,
+    xref = "paper",
+    y0 = y,
+    y1 = y,
+    line = list(color = color)
+  )
+}
+
+egg_se_bp=
+plot_ly(data=results, type='box') %>%
+	add_trace(x=~year, y=~ResultValue, showlegend=F) %>% 
+		layout(
+			xaxis = list(title = "Year"),
+			yaxis = list(side = 'left', title = 'Egg [Se] (mg/kg dry weight)'),
+			shapes = list(hline(12.5))
+		) %>% 
+		config(displaylogo = FALSE,
+			modeBarButtonsToRemove = c(
+				'sendDataToCloud',
+				'hoverClosestCartesian',
+				'hoverCompareCartesian',
+				'lasso2d',
+				'select2d'
+			)
+		) %>%
+	add_text(showlegend = FALSE, x = 2011.1, y = c(12.75), text = c("Se criterion (12.5 mg/kg)"))
+egg_se_bp
+```
+
+------
+
+# Assessment narrative
+Because all nesting season geomeans are less than the applicable numeric criterion of 12.5 mg/kg dry weight, Gilbert Bay is fully supporting for the class 5A bird egg selenium criterion. In addition, all seasonal geomeans were 
+lower than the lowest egg Se concentration trigger identified in R317-2-14 (5.0 mg/kg). DWQ will continue routine monitoring of egg tissue in GSL.
+
+------
+ 

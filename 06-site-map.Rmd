@@ -39,8 +39,5 @@ au_map=wqTools::baseMap() %>% clearGroup("Assessment units") %>%
 		label=(gsl_au_poly$AU_NAME)
 	) %>%
 	showGroup("Assessment units") %>% 
-	fitBounds(bbox$xmin[[1]], bbox$ymin[[1]], bbox$xmax[[1]], bbox$ymax[[1]])
+	fitBounds(-112.9889834316615, 40.65976503522424, -111.9315494464152, 41.717990192304775)
 ```
-
-
-

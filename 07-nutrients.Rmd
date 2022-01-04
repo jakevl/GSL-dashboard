@@ -1,0 +1,111 @@
+# Nutrients
+
+## Time series
+### Total phosphorus
+```{r, tp-ts}
+tp_ts=
+	plot_ly(x=~sample_dt) %>%
+		add_markers(data=wq_data[wq_data$rel_depth=="Bottom" & wq_data$Bay=="Gilbert",], x=~sample_dt, y=~tp, name="Gilbert bottom", visible=T,
+			text=~site_no,
+			marker = list(symbol=2, color = cols[[2]][[1]],size = 10,line = list(color = cols[[2]][[2]],width = 2))
+		) %>% 
+		add_markers(data=wq_data[wq_data$rel_depth=="Surface" & wq_data$Bay=="Gilbert",], x=~sample_dt, y=~tp, name="Gilbert surface", visible=T, 
+			text=~site_no,
+			marker = list(color = cols[[5]][[1]],size = 10,line = list(color = cols[[5]][[2]],width = 2))
+		) %>%
+		layout(
+			xaxis = list(title = ""),
+			yaxis = list(side = 'left', title = 'Total phosphorus (mg/L)'),
+			legend = list(x = 0.01, y = 0.95)
+		) %>% 
+		config(displaylogo = FALSE,
+			modeBarButtonsToRemove = c(
+				'sendDataToCloud',
+				'hoverClosestCartesian',
+				'hoverCompareCartesian',
+				'lasso2d',
+				'select2d'
+			)
+		)
+tp_ts
+```
+
+### Total nitrogen
+```{r, tn-ts}
+tn_ts=
+	plot_ly(x=~sample_dt) %>%
+		add_markers(data=wq_data[wq_data$rel_depth=="Bottom" & wq_data$Bay=="Gilbert",], x=~sample_dt, y=~tn, name="Gilbert bottom", visible=T,
+			text=~site_no,
+			marker = list(symbol=2, color = cols[[2]][[1]],size = 10,line = list(color = cols[[2]][[2]],width = 2))
+		) %>% 
+		add_markers(data=wq_data[wq_data$rel_depth=="Surface" & wq_data$Bay=="Gilbert",], x=~sample_dt, y=~tn, name="Gilbert surface", visible=T, 
+			text=~site_no,
+			marker = list(color = cols[[5]][[1]],size = 10,line = list(color = cols[[5]][[2]],width = 2))
+		) %>%
+		layout(
+			xaxis = list(title = ""),
+			yaxis = list(side = 'left', title = 'Total nitrogen (mg/L)'),
+			legend = list(x = 0.01, y = 0.95)
+		) %>% 
+		config(displaylogo = FALSE,
+			modeBarButtonsToRemove = c(
+				'sendDataToCloud',
+				'hoverClosestCartesian',
+				'hoverCompareCartesian',
+				'lasso2d',
+				'select2d'
+			)
+		)
+tn_ts
+```
+
+
+## Boxplot
+```{r, nut-boxplots}
+tp_bp=
+	plot_ly(wq_data, x=~Bay, y=~tp, type="box") %>%
+		layout(
+			xaxis = list(title = ""),
+			yaxis = list(side = 'left', title = 'Total phosphorus (mg/L)', type="log"),
+			legend = list(x = 0.01, y = 0.95)
+		) %>% 
+		config(displaylogo = FALSE,
+			modeBarButtonsToRemove = c(
+				'sendDataToCloud',
+				'hoverClosestCartesian',
+				'hoverCompareCartesian',
+				'lasso2d',
+				'select2d'
+			)
+		)
+tp_bp		
+
+
+
+tn_bp=
+	plot_ly(wq_data, x=~Bay, y=~tn, type="box") %>%
+		layout(
+			xaxis = list(title = ""),
+			yaxis = list(side = 'left', title = 'Total nitrogen (mg/L)', type="log"),
+			legend = list(x = 0.01, y = 0.95)
+		) %>% 
+		config(displaylogo = FALSE,
+			modeBarButtonsToRemove = c(
+				'sendDataToCloud',
+				'hoverClosestCartesian',
+				'hoverCompareCartesian',
+				'lasso2d',
+				'select2d'
+			)
+		)
+tn_bp		
+
+
+
+```
+
+
+
+
+
+

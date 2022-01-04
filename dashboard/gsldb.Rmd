@@ -17,9 +17,6 @@ load('sal_db_figs.Rdata')
 
 
 # Overview map
-Sidebar {.sidebar data-width=300}
--------------------------------------
-
 
 Row
 -----------------------------------------------------------------------
@@ -30,9 +27,6 @@ au_map
 
 
 # Elevation
-Sidebar {.sidebar data-width=300}
--------------------------------------
-
 
 Row
 -----------------------------------------------------------------------
@@ -62,14 +56,11 @@ Sidebar {.sidebar data-width=300}
 -------------------------------------
 
 ### Salinity in Great Salt Lake
-**NOTE:**
-This is a draft and discussion version of a potential GSL salinity dashboard. This dashboard does not convey any official positions.  
-
-Salinity is measured... All data were downloaded from [USGS NWIS](https://waterdata.usgs.gov/nwis){target="_blank"}. 
-
-**Gilbert Bay salinity** is characterized by the average of open water Gilbert Bay surface samples in the last 120 days.  
+**Current Gilbert Bay salinity** is characterized by the average of open water Gilbert Bay surface samples in the last 120 days.  
 <br>
-**Gunnison Bay salinity** is the average of measurements from last 120 days at the Gunnison Bay near Saline, UT gauge.
+**Current Gunnison Bay salinity** is the average of measurements from last 120 days at the Gunnison Bay near Saline, UT gauge.
+  
+All salinity data were downloaded from [USGS NWIS](https://waterdata.usgs.gov/nwis){target="_blank"}. 
 
 
 Row
@@ -94,14 +85,67 @@ sal_ts
 ```
 
 
-# Satellite
+# Nutrients
+
+Row
+-----------------------------------------------------------------------
+
+### Gilbert Bay phosphorus time series
+```{r}
+tp_ts
+```
+
+
+### Gilbert Bay nitrogen time series
+```{r}
+tn_ts
+```
+
+Row
+-----------------------------------------------------------------------
+
+
+### Phosphorus by bay
+```{r}
+tp_bp
+```
+
+### Nitrogen by bay
+```{r}
+tn_bp
+```
+
+
+# Selenium
+
 Sidebar {.sidebar data-width=300}
 -------------------------------------
+DWQ has established a numeric criterion for selenium (Se) in bird eggs in Gilbert Bay of 12.5 mg/kg dry weight, and has been monitoring bird egg Se concentrations since 2011. 
+All observed nesting season Se geomeans to date have been less than 12.5. Therefore, DWQ has concluded that Gilbert Bay is fully supporting for the class 5A bird egg 
+selenium criterion. In addition, all observed seasonal geomeans have been lower than the lowest egg Se concentration trigger identified in R317-2-14 (5.0 mg/kg). 
+DWQ will continue to monitor and assess Se concentrations in egg tissue in GSL.
+
+Row
+-----------------------------------------------------------------------
+
+### Selenium in bird eggs
+
+```{r, se-eggs}
+egg_se_bp
+```
+
+
+# Satellite
+
+Sidebar {.sidebar data-width=300}
+-------------------------------------
+
 Satellite imagery of Great Salt Lake in the summer of 2002, at an elevation of about 4,200 ft (approximate long-term average lake elevation) versus 
 the summer of 2019 with the lake at an elevation of about 4,192 ft.
 
 Row
 -----------------------------------------------------------------------
+
 ###
 ```{r, out.extra='style="border: none;"', out.width='100%', eval=F}
 # see: https://github.com/NUKnightLab/juxtapose#html-implementation
@@ -125,8 +169,6 @@ bottom: 0.5em;
 left: 0.5em;
 }
 </style>
-
-
 
 
 

@@ -60,7 +60,9 @@ wq_data=dataRetrieval::readNWISqw(expanded=F,tz="America/Denver",startDate="01-0
 			"72263",
 			"00095",
 			"72012",
-			"72013")
+			"72013",
+			"00665",
+			"62855")
 )
 
 wq_data=dplyr::rename(wq_data,
@@ -70,7 +72,9 @@ wq_data=dplyr::rename(wq_data,
 	Density_gcm3=p72263,
 	SpecCond_uScm=p00095,
 	SG=p72013,
-	SG_temp=p72012)
+	SG_temp=p72012,
+	tp=p00665,
+	tn=p62855)
 
 wq_data=within(wq_data, {
 	sg_20c=SG/((SG_temp-20)*0.0002+1)
